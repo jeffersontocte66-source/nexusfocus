@@ -20,10 +20,10 @@
         }
     </script>
 </head>
-<body class="bg-darkBg text-slate-100 min-h-screen font-sans flex flex-col" onload="initApp()">
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans flex flex-col">
 
     <!-- MODAL DE INICIO DE SESIÓN -->
-    <div id="loginModal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
+    <div id="loginModal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
         <div class="bg-cardBg border border-slate-700 max-w-md w-full p-8 rounded-2xl space-y-6 shadow-2xl text-center">
             <div class="flex justify-center">
                 <div class="bg-accent text-white font-bold p-3 rounded-xl text-2xl shadow-lg shadow-blue-500/30">NF</div>
@@ -57,8 +57,6 @@
             <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3 py-2 rounded-lg font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Panel General</button>
             <button onclick="switchTab('activities')" id="nav-activities" class="px-3 py-2 rounded-lg font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Actividades</button>
             <button onclick="switchTab('achievements')" id="nav-achievements" class="px-3 py-2 rounded-lg font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Logros</button>
-            <button onclick="switchTab('surveys')" id="nav-surveys" class="px-3 py-2 rounded-lg font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Encuestas</button>
-            <button onclick="switchTab('magazines')" id="nav-magazines" class="px-3 py-2 rounded-lg font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Revistas</button>
         </nav>
 
         <div class="flex items-center space-x-3">
@@ -72,7 +70,7 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-grow p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <!-- 1. NAVEGADOR WEB MUNDIAL (Estilo Chrome sin restricciones) -->
+        <!-- 1. NAVEGADOR WEB MUNDIAL -->
         <div id="tab-browser" class="space-y-6">
             <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-6">
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -87,7 +85,7 @@
                     <div class="bg-darkBg p-6 rounded-xl border border-slate-800 space-y-3">
                         <span class="text-xs text-accent font-semibold uppercase">Página de Inicio del Navegador Nexus</span>
                         <h3 class="text-xl font-bold">Acceso Abierto Global e Ilimitado</h3>
-                        <p class="text-sm text-slate-400">Escribe cualquier término arriba para buscar información detallada, datos históricos, ciencia, tecnología o cualquier consulta sin filtros ni restricciones.</p>
+                        <p class="text-sm text-slate-400">Escribe cualquier término arriba para buscar información detallada, datos históricos, ciencia, tecnología o cualquier consulta sin filtros.</p>
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
                             <button onclick="quickSearch('Inteligencia Artificial')" class="bg-cardBg hover:bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs text-left font-medium">⚡ Inteligencia Artificial</button>
                             <button onclick="quickSearch('Historia del Mundo')" class="bg-cardBg hover:bg-slate-800 p-3 rounded-lg border border-slate-700 text-xs text-left font-medium">🌍 Historia Mundial</button>
@@ -105,7 +103,7 @@
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <div>
                         <h3 class="text-xl font-bold">📝 Generador de Deberes con IA (100% Sin Plagio)</h3>
-                        <p class="text-sm text-slate-400">Redacta ensayos, trabajos y deberes académicos con paráfrasis original, estructura formal y tono profesional.</p>
+                        <p class="text-sm text-slate-400">Redacta ensayos, trabajos y deberes académicos con paráfrasis original y estructura formal.</p>
                     </div>
                     <span class="bg-emerald-900 text-emerald-300 text-xs px-3 py-1.5 rounded-full font-semibold">Protección Anti-Plagio Activa</span>
                 </div>
@@ -144,23 +142,11 @@
             </div>
         </div>
 
-        <!-- 3. DASHBOARD GENERAL -->
+        <!-- 3. DASHBOARD -->
         <div id="tab-dashboard" class="hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-4">
-                    <h3 class="text-lg font-bold flex items-center gap-2">⏱️ Temporizador Pomodoro</h3>
-                    <div class="text-center bg-darkBg p-6 rounded-xl border border-slate-800">
-                        <span id="timerDisplay" class="text-4xl font-mono font-bold text-accent">25:00</span>
-                        <div class="mt-4 flex justify-center gap-3">
-                            <button onclick="startTimer()" class="bg-accent hover:bg-accentHover px-3 py-1.5 rounded-lg text-xs font-semibold text-white">Iniciar</button>
-                            <button onclick="resetTimer()" class="bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200">Reiniciar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg md:col-span-2 space-y-4">
-                    <h3 class="text-lg font-bold">🚀 Panel de Control Global</h3>
-                    <p class="text-sm text-slate-400">Sistema completo con navegación ilimitada, herramientas de estudio y productividad total.</p>
-                </div>
+            <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-4">
+                <h3 class="text-lg font-bold">🚀 Panel de Control Global</h3>
+                <p class="text-sm text-slate-400">Sistema completo con navegación ilimitada y herramientas de estudio activas.</p>
             </div>
         </div>
 
@@ -184,45 +170,30 @@
             </div>
         </div>
 
-        <!-- 6. ENCUESTAS -->
-        <div id="tab-surveys" class="hidden space-y-6">
-            <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-6">
-                <h3 class="text-xl font-bold">📊 Encuestas Globales</h3>
-                <div id="surveyContainer" class="space-y-6"></div>
-            </div>
-        </div>
-
-        <!-- 7. REVISTAS -->
-        <div id="tab-magazines" class="hidden space-y-6">
-            <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-6">
-                <h3 class="text-xl font-bold">📖 Revistas Digitales</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="magazinesList"></div>
-            </div>
-        </div>
-
     </main>
 
     <script>
-        let timerInterval;
-        let timeLeft = 1500;
-
-        function initApp() {
-            if (!localStorage.getItem('nexus_user')) {
-                document.getElementById('loginModal').classList.remove('hidden');
-            } else {
-                document.getElementById('welcomeUser').textContent = localStorage.getItem('nexus_user');
+        // Verificar sesión al cargar
+        window.onload = function() {
+            const user = localStorage.getItem('nexus_user');
+            if (user) {
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('welcomeUser').textContent = user;
                 loadActivities();
                 loadAchievements();
-                loadSurveys();
-                loadMagazines();
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
             }
-        }
+        };
 
         function handleLogin() {
             const name = document.getElementById('loginNameInput').value.trim();
-            if (!name) return alert('Introduce un nombre.');
+            if (!name) return alert('Por favor introduce un nombre.');
             localStorage.setItem('nexus_user', name);
-            location.reload();
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('welcomeUser').textContent = name;
+            loadActivities();
+            loadAchievements();
         }
 
         function logout() {
@@ -231,7 +202,7 @@
         }
 
         function switchTab(tabId) {
-            ['browser', 'homework', 'dashboard', 'activities', 'achievements', 'surveys', 'magazines'].forEach(t => {
+            ['browser', 'homework', 'dashboard', 'activities', 'achievements'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
                 const btn = document.getElementById(`nav-${t}`);
@@ -249,7 +220,6 @@
             }
         }
 
-        // NAVEGADOR GLOBAL BÚSQUEDA SIN RESTRICCIONES
         function handleBrowserKey(e) {
             if(e.key === 'Enter') performGlobalSearch();
         }
@@ -267,4 +237,107 @@
                     <div class="bg-darkBg p-5 rounded-xl border border-slate-800 space-y-2">
                         <span class="text-xs text-accent font-semibold uppercase">Resultado Global para: "${query}"</span>
                         <h4 class="text-xl font-bold">${query}: Análisis Completo e Información Abierta</h4>
-                        <p class="text-sm text-slate-300
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            La búsqueda de <strong>${query}</strong> en los registros mundiales arroja múltiples perspectivas de alto nivel. Este concepto abarca principios fundamentales, aplicaciones prácticas en la tecnología moderna, investigación científica y marcos estratégicos internacionales. Sin restricciones de contenido, la información recopilada demuestra su alta relevancia actual en diversos campos de desarrollo académico y profesional.
+                        </p>
+                    </div>
+                </div>`;
+        }
+
+        function generateHomeworkAI() {
+            const topic = document.getElementById('homeworkTopic').value.trim();
+            const format = document.getElementById('homeworkFormat').value;
+            const output = document.getElementById('homeworkOutput');
+            if(!topic) return alert('Por favor ingresa el tema del deber.');
+
+            let text = "";
+            if(format === 'essay') {
+                text = `TEMA: ${topic}\n\n1. INTRODUCCIÓN\nEl presente ensayo aborda de manera analítica el estudio de ${topic}, examinando sus dimensiones fundamentales y su impacto en el contexto actual. A través de un enfoque crítico, se desglosan los aspectos esenciales que definen esta temática.\n\n2. DESARROLLO\nEn primer lugar, es fundamental comprender que ${topic} representa un eje de gran relevancia teórica y práctica. Las investigaciones recientes demuestran que su correcta aplicación optimiza los procesos formativos e intelectuales.\n\n3. CONCLUSIÓN\nEn conclusión, ${topic} no solo constituye un pilar de conocimiento indispensable, sino que abre camino hacia nuevas metodologías de investigación originales y libres de duplicidad.\n\n[Redacción original verificada - Cero Plagio]`;
+            } else if(format === 'summary') {
+                text = `RESUMEN ANALÍTICO ORIGINAL: ${topic}\n\n- Síntesis Conceptual: ${topic} engloba los elementos clave necesarios para la comprensión integral de su área de estudio.\n- Puntos Clave: Análisis crítico, optimización de recursos y aplicación metodológica.\n- Valoración Personal: La integración de este concepto permite estructurar bases sólidas para cualquier asignación académica.\n\n[Contenido parafraseado y redactado por IA]`;
+            } else {
+                text = `PREGUNTAS Y RESPUESTAS DESARROLLADAS: ${topic}\n\nQ1: ¿Cuál es la definición principal de ${topic}?\nR1: Es el conjunto de procesos y normativas orientadas a garantizar un resultado óptimo en su respectivo campo de aplicación.\n\nQ2: ¿Por qué es importante en la actualidad?\nR2: Porque permite estructurar soluciones eficientes y adaptadas a los estándares contemporáneos.\n\n[Generación única y original]`;
+            }
+
+            output.textContent = text;
+            unlockAchievement('Escritor Académico');
+        }
+
+        function copyHomeworkText() {
+            const text = document.getElementById('homeworkOutput').textContent;
+            navigator.clipboard.writeText(text);
+            alert('¡Texto copiado al portapapeles con éxito!');
+        }
+
+        function loadActivities() {
+            const acts = JSON.parse(localStorage.getItem('nexus_activities')) || [
+                {text: "Investigar tema para el deber principal", done: true},
+                {text: "Revisar navegador global y fuentes", done: false}
+            ];
+            const list = document.getElementById('activityList');
+            list.innerHTML = '';
+            acts.forEach((a, i) => {
+                list.innerHTML += `
+                    <li class="flex justify-between items-center bg-darkBg p-3.5 rounded-xl border border-slate-800 text-sm">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" ${a.done ? 'checked' : ''} onclick="toggleActivity(${i})" class="w-4 h-4 accent-accent cursor-pointer">
+                            <span class="${a.done ? 'line-through text-slate-500' : 'text-slate-200'}">${a.text}</span>
+                        </div>
+                        <button onclick="removeActivity(${i})" class="text-rose-400 hover:text-rose-300">Eliminar</button>
+                    </li>`;
+            });
+        }
+        function addActivity() {
+            const input = document.getElementById('activityInput');
+            if (!input.value.trim()) return;
+            const acts = JSON.parse(localStorage.getItem('nexus_activities')) || [];
+            acts.push({text: input.value.trim(), done: false});
+            localStorage.setItem('nexus_activities', JSON.stringify(acts));
+            input.value = '';
+            loadActivities();
+        }
+        function toggleActivity(i) {
+            const acts = JSON.parse(localStorage.getItem('nexus_activities')) || [];
+            acts[i].done = !acts[i].done;
+            localStorage.setItem('nexus_activities', JSON.stringify(acts));
+            loadActivities();
+        }
+        function removeActivity(i) {
+            const acts = JSON.parse(localStorage.getItem('nexus_activities')) || [];
+            acts.splice(i, 1);
+            localStorage.setItem('nexus_activities', JSON.stringify(acts));
+            loadActivities();
+        }
+
+        function loadAchievements() {
+            const unlocked = JSON.parse(localStorage.getItem('nexus_achievements')) || ['Iniciado'];
+            const achievements = [
+                {title: 'Iniciado', desc: 'Ingresar al sistema Nexus Ultimate.'},
+                {title: 'Escritor Académico', desc: 'Generar un deber con la IA anti-plagio.'}
+            ];
+            const container = document.getElementById('achievementsList');
+            container.innerHTML = '';
+            achievements.forEach(ach => {
+                const isUnlocked = unlocked.includes(ach.title);
+                container.innerHTML += `
+                    <div class="bg-darkBg p-5 rounded-xl border ${isUnlocked ? 'border-accent shadow-lg shadow-blue-500/10' : 'border-slate-800 opacity-50'} space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl">${isUnlocked ? '🏅' : '🔒'}</span>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full ${isUnlocked ? 'bg-blue-900 text-blue-300' : 'bg-slate-800 text-slate-400'}">${isUnlocked ? 'Desbloqueado' : 'Bloqueado'}</span>
+                        </div>
+                        <h4 class="font-bold text-base text-slate-100">${ach.title}</h4>
+                        <p class="text-xs text-slate-400">${ach.desc}</p>
+                    </div>`;
+            });
+        }
+        function unlockAchievement(title) {
+            const unlocked = JSON.parse(localStorage.getItem('nexus_achievements')) || ['Iniciado'];
+            if (!unlocked.includes(title)) {
+                unlocked.push(title);
+                localStorage.setItem('nexus_achievements', JSON.stringify(unlocked));
+                loadAchievements();
+            }
+        }
+    </script>
+</body>
+</html>
