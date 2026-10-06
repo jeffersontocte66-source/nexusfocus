@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusFocus - Productividad & Microaprendizaje</title>
+    <!-- Tailwind CSS para un diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accent: '#3b82f6',
+                        accentHover: '#2563eb'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans flex flex-col" onload="checkAuthSession()">
+
+    <!-- MODAL DE INICIO DE SESIÓN FÁCIL -->
+    <div id="loginModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-cardBg border border-slate-700 max-w-md w-full p-8 rounded-2xl space-y-6 shadow-2xl text-center">
+            <div class="flex justify-center">
+                <div class="bg-accent text-white font-bold p-3 rounded-xl text-2xl">NF</div>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold">Bienvenido a NexusFocus</h2>
+                <p class="text-slate-400 text-sm mt-1">Tu plataforma de enfoque, productividad y microaprendizaje.</p>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">¿Cómo te llamas o cómo se llama tu empresa?</label>
+                    <input type="text" id="loginNameInput" placeholder="Ej. Sombra Cenepa / Jefferson" class="w-full bg-darkBg border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-accent text-slate-100">
+                </div>
+            </div>
+
+            <button onclick="handleLogin()" class="w-full bg-accent hover:bg-accentHover py-3 rounded-xl font-semibold text-white transition shadow-lg shadow-blue-500/20">
+                Iniciar Sesión al Instante &rarr;
+            </button>
+        </div>
+    </div>
+
+    <!-- Navegación Superior Profesional -->
+    <header class="bg-cardBg border-b border-slate-800 px-6 py-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <div class="bg-accent text-white font-bold p-2 rounded-lg text-lg">NF</div>
+            <span class="text-xl font-bold tracking-wide">Nexus<span class="text-accent">Focus</span></span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="text-right hidden sm:block">
+                <span id="welcomeUser" class="text-sm font-semibold text-slate-200">Hola, Usuario</span>
+                <button onclick="logout()" class="block text-xs text-rose-400 hover:underline">Cerrar Sesión</button>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="switchMode('b2c')" id="btnB2C" class="px-4 py-2 rounded-lg font-medium bg-accent text-white transition">Modo Personal (B2C)</button>
+                <button onclick="switchMode('b2b')" id="btnB2B" class="px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition">Panel Empresas (B2B)</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow p-6 max-w-7xl mx-auto w-full">
+
+        <!-- VISTA B2C: USUARIO FINAL -->
+        <div id="viewB2C" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Columna 1: Gestor de Tareas / Enfoque -->
+                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg md:col-span-1 space-y-6">
+                    <h2 class="text-xl font-semibold flex items-center gap-2">
+                        ⏱️ Temporizador de Enfoque
+                    </h2>
+                    <div class="text-center bg-darkBg p-6 rounded-xl border border-slate-800">
+                        <span id="timerDisplay" class="text-5xl font-mono font-bold text-accent">25:00</span>
+                        <div class="mt-4 flex justify-center gap-3">
+                            <button onclick="startTimer()" class="bg-accent hover:bg-accentHover px-4 py-2 rounded-lg font-semibold text-white transition">Iniciar</button>
+                            <button onclick="resetTimer()" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg font-semibold text-slate-200 transition">Reiniciar</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold">Tus Tareas Clave</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="taskInput" placeholder="Añadir nueva tarea..." onkeypress="handleKeyPress(event)" class="flex-grow bg-darkBg border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent">
+                            <button onclick="addTask()" class="bg-accent hover:bg-accentHover px-4 py-2 rounded-lg text-sm font-semibold text-white transition">+</button>
+                        </div>
+                        <ul id="taskList" class="space-y-2 max-h-48 overflow-y-auto">
+                            <!-- Tareas dinámicas -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Columna 2 & 3: Microaprendizaje Interactivo Ampliado -->
+                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg md:col-span-2 space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold">💡 Catálogo de Microaprendizaje (5 min)</h2>
+                        <span class="text-xs bg-blue-900 text-blue-300 px-3 py-1 rounded-full font-medium">Fácil y Práctico</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Lección 1 -->
+                        <div onclick="openLesson('Técnica de Bloques de Tiempo', 'Divide tu día en bloques de 25 o 50 minutos dedicados a una sola tarea. Evita la multitarea para reducir el desgaste mental y duplicar tu productividad.')" class="bg-darkBg p-5 rounded-xl border border-slate-800 hover:border-accent transition cursor-pointer group">
+                            <span class="text-xs text-accent font-semibold">Habilidad Clave</span>
+                            <h4 class="font-bold text-lg mt-1 group-hover:text-accent transition">Técnica de Bloques de Tiempo</h4>
+                            <p class="text-sm text-slate-400 mt-2">Estructura tu jornada sin interrupciones ni fatiga mental.</p>
+                            <span class="mt-4 text-sm font-semibold text-accent flex items-center gap-1 inline-block">Comenzar lección &rarr;</span>
+                        </div>
+                        <!-- Lección 2 -->
+                        <div onclick="openLesson('Automatización Básica con IA', 'Utiliza la Inteligencia Artificial como tu asistente personal. Escribe borradores de correos, resume documentos largos y automatiza procesos rutinarios en minutos.')" class="bg-darkBg p-5 rounded-xl border border-slate-800 hover:border-accent transition cursor-pointer group">
+                            <span class="text-xs text-accent font-semibold">Inteligencia Artificial</span>
+                            <h4 class="font-bold text-lg mt-1 group-hover:text-accent transition">Automatización Básica con IA</h4>
+                            <p class="text-sm text-slate-400 mt-2">Reduce tus tareas repetitivas diarias usando prompts efectivos.</p>
+                            <span class="mt-4 text-sm font-semibold text-accent flex items-center gap-1 inline-block">Comenzar lección &rarr;</span>
+                        </div>
+                        <!-- Lección 3 -->
+                        <div onclick="openLesson('Gestión del Estrés Laboral', 'Aprende ejercicios de respiración rápida y pausas activas para mantener la calma bajo presión y evitar el agotamiento crónico (burnout).')" class="bg-darkBg p-5 rounded-xl border border-slate-800 hover:border-accent transition cursor-pointer group">
+                            <span class="text-xs text-emerald-400 font-semibold">Bienestar</span>
+                            <h4 class="font-bold text-lg mt-1 group-hover:text-accent transition">Gestión del Estrés y Pausas Activas</h4>
+                            <p class="text-sm text-slate-400 mt-2">Mantén la calma y la claridad mental en días exigentes.</p>
+                            <span class="mt-4 text-sm font-semibold text-accent flex items-center gap-1 inline-block">Comenzar lección &rarr;</span>
+                        </div>
+                        <!-- Lección 4 -->
+                        <div onclick="openLesson('Comunicación Asertiva', 'Expresa tus ideas de forma clara y directa en entornos de trabajo o académicos, mejorando la colaboración y evitando malentendidos.')" class="bg-darkBg p-5 rounded-xl border border-slate-800 hover:border-accent transition cursor-pointer group">
+                            <span class="text-xs text-purple-400 font-semibold">Habilidades Blandas</span>
+                            <h4 class="font-bold text-lg mt-1 group-hover:text-accent transition">Comunicación Asertiva</h4>
+                            <p class="text-sm text-slate-400 mt-2">Mejora tus relaciones profesionales y de liderazgo.</p>
+                            <span class="mt-4 text-sm font-semibold text-accent flex items-center gap-1 inline-block">Comenzar lección &rarr;</span>
+                        </div>
+                    </div>
+
+                    <!-- Progreso del usuario -->
+                    <div class="bg-darkBg p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium text-slate-300">Tu Progreso Semanal</span>
+                            <span id="progressText" class="text-accent font-semibold">50% Completado</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div id="progressBar" class="bg-accent h-full w-[50%] rounded-full transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA B2B: PANEL DE EMPRESAS Y CONFIGURACIÓN -->
+        <div id="viewB2B" class="hidden space-y-8">
+            <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow-lg space-y-6">
+                
+                <!-- Cabecera de Empresa Registrada -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-darkBg p-6 rounded-xl border border-slate-800">
+                    <div>
+                        <span class="text-xs text-accent font-semibold uppercase tracking-wider">Empresa Registrada</span>
+                        <h2 id="displayCompanyName" class="text-2xl font-bold text-slate-100 mt-1">Mi Empresa S.A.</h2>
+                        <p id="displayCompanyDetails" class="text-sm text-slate-400 mt-1">Sector: Tecnología & Productividad</p>
+                    </div>
+                    <button onclick="openEditCompanyModal()" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg font-semibold text-sm text-slate-200 transition">⚙️ Editar Datos de Empresa</button>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <div>
+                        <h3 class="text-xl font-bold">Gestión de Equipos y Colaboradores</h3>
+                        <p class="text-sm text-slate-400">Añade y administra a los miembros vinculados a tu empresa.</p>
+                    </div>
+                </div>
+
+                <!-- Formulario para Registrar Empleado -->
+                <div class="bg-darkBg p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h4 class="font-semibold text-base text-slate-200">Registrar Nuevo Colaborador</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="text" id="employeeName" placeholder="Nombre completo" class="bg-cardBg border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent text-slate-100">
+                        <input type="email" id="employeeEmail" placeholder="Correo corporativo" class="bg-cardBg border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent text-slate-100">
+                        <button onclick="addEmployee()" class="bg-accent hover:bg-accentHover px-4 py-2 rounded-lg font-semibold text-sm text-white transition">Añadir Empleado</button>
+                    </div>
+                </div>
+
+                <!-- Tabla de Empleados Registrados -->
+                <div class="bg-darkBg p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h4 class="font-semibold text-base text-slate-200">Lista de Colaboradores Activos</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200 uppercase text-xs">
+                                <tr>
+                                    <th class="p-3">Nombre</th>
+                                    <th class="p-3">Correo</th>
+                                    <th class="p-3">Estado</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employeeTableBody">
+                                <!-- Datos dinámicos -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Profesional de Lecciones -->
+    <div id="lessonModal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-cardBg border border-slate-700 max-w-lg w-full p-6 rounded-2xl space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 id="modalTitle" class="text-xl font-bold text-accent">Título de la Lección</h3>
+                <button onclick="closeLesson()" class="text-slate-400 hover:text-white font-bold text-lg">×</button>
+            </div>
+            <p id="modalDescription" class="text-slate-300 text-sm leading-relaxed">Contenido de la lección...</p>
+            <div class="pt-4 flex justify-end gap-3">
+                <button onclick="closeLesson()" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-600">Cerrar</button>
+                <button onclick="completeLesson()" class="px-4 py-2 bg-accent text-white rounded-lg text-sm font-semibold hover:bg-accentHover">✔ Marcar como Completada</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Datos de la Empresa -->
+    <div id="companyModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-cardBg border border-slate-700 max-w-md w-full p-6 rounded-2xl space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-accent">Configurar Empresa</h3>
+                <button onclick="closeEditCompanyModal()" class="text-slate-400 hover:text-white font-bold text-lg">×</button>
+            </div>
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nombre Oficial de la Empresa</label>
+                    <input type="text" id="editCompanyName" placeholder="Ej. Sombra Cenepa" class="w-full bg-darkBg border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Sector o Descripción</label>
+                    <input type="text" id="editCompanySector" placeholder="Ej. Indumentaria & Táctico" class="w-full bg-darkBg border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent text-slate-100">
+                </div>
+            </div>
+            <div class="pt-4 flex justify-end gap-3">
+                <button onclick="closeEditCompanyModal()" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-600">Cancelar</button>
+                <button onclick="saveCompanyDetails()" class="px-4 py-2 bg-accent text-white rounded-lg text-sm font-semibold hover:bg-accentHover">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script General con Gestión y Edición de Empresa -->
+    <script>
+        // Verificar sesión al cargar
+        function checkAuthSession() {
+            const sessionUser = localStorage.getItem('nexus_session_user');
+            if (!sessionUser) {
+                document.getElementById('loginModal').classList.remove('hidden');
+            } else {
+                document.getElementById('welcomeUser').textContent = `Hola, ${sessionUser}`;
+                initializeAppData();
+            }
+        }
+
+        // Manejar el inicio de sesión rápido
+        function handleLogin() {
+            const input = document.getElementById('loginNameInput');
+            const name = input.value.trim();
+            if (!name) {
+                alert('Por favor introduce un nombre para continuar.');
+                return;
+            }
+            localStorage.setItem('nexus_session_user', name);
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('welcomeUser').textContent = `Hola, ${name}`;
+            initializeAppData();
+        }
+
+        // Cerrar sesión
+        function logout() {
+            localStorage.removeItem('nexus_session_user');
+            location.reload();
+        }
+
+        function initializeAppData() {
+            loadTasks();
+            loadProgress();
+            loadEmployees();
+            loadCompanyInfo();
+        }
+
+        function switchMode(mode) {
+            const viewB2C = document.getElementById('viewB2C');
+            const viewB2B = document.getElementById('viewB2B');
+            const btnB2C = document.getElementById('btnB2C');
+            const btnB2B = document.getElementById('btnB2B');
+
+            if (mode === 'b2c') {
+                viewB2C.classList.remove('hidden');
+                viewB2B.classList.add('hidden');
+                btnB2C.className = "px-4 py-2 rounded-lg font-medium bg-accent text-white transition";
+                btnB2B.className = "px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition";
+            } else {
+                viewB2C.classList.add('hidden');
+                viewB2B.classList.remove('hidden');
+                btnB2B.className = "px-4 py-2 rounded-lg font-medium bg-accent text-white transition";
+                btnB2C.className = "px-4 py-2 rounded-lg font-medium bg-slate-700 text-slate-300 hover:bg-slate-600 transition";
+            }
+        }
+
+        // Cargar e inicializar información de la empresa
+        function loadCompanyInfo() {
+            const companyName = localStorage.getItem('nexus_company_name') || 'Sombra Cenepa';
+            const companySector = localStorage.getItem('nexus_company_sector') || 'Innovación & Emprendimiento';
+
+            document.getElementById('displayCompanyName').textContent = companyName;
+            document.getElementById('displayCompanyDetails').textContent = `Sector: ${companySector}`;
+        }
+
+        function openEditCompanyModal() {
+            document.getElementById('editCompanyName').value = localStorage.getItem('nexus_company_name') || 'Sombra Cenepa';
+            document.getElementById('editCompanySector').value = localStorage.getItem('nexus_company_sector') || 'Innovación & Emprendimiento';
+            document.getElementById('companyModal').classList.remove('hidden');
+        }
+
+        function closeEditCompanyModal() {
+            document.getElementById('companyModal').classList.add('hidden');
+        }
+
+        function saveCompanyDetails() {
+            const name = document.getElementById('editCompanyName').value.trim();
+            const sector = document.getElementById('editCompanySector').value.trim();
+
+            if (!name || !sector) {
+                alert('Por favor completa todos los campos de la empresa.');
+                return;
+            }
+
+            localStorage.setItem('nexus_company_name', name);
+            localStorage.setItem('nexus_company_sector', sector);
+
+            loadCompanyInfo();
+            closeEditCompanyModal();
+            alert('¡Datos de la empresa actualizados con éxito!');
+        }
+
+        // Tareas con LocalStorage
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('nexus_tasks')) || [];
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach((taskText, index) => {
+                renderTaskItem(taskText, index);
+            });
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+            if(!taskText) return;
+            const tasks = JSON.parse(localStorage.getItem('nexus_tasks')) || [];
+            tasks.push(taskText);
+            localStorage.setItem('nexus_tasks', JSON.stringify(tasks));
+            input.value = '';
+            loadTasks();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') addTask();
+        }
+
+        function removeTask(index) {
+            const tasks = JSON.parse(localStorage.getItem('nexus_tasks')) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem('nexus_tasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        function renderTaskItem(taskText, index) {
+            const list = document.getElementById('taskList');
+            const li = document.createElement('li');
+            li.className = "flex justify-between items-center bg-darkBg p-3 rounded-lg border border-slate-800 text-sm";
+            li.innerHTML = `<span>${taskText}</span> <button onclick="removeTask(${index})" class="text-rose-400 hover:text-rose-300 font-bold px-2">×</button>`;
+            list.appendChild(li);
+        }
+
+        // Temporizador
+        let timerInterval;
+        function startTimer() {
+            clearInterval(timerInterval);
+            let totalSeconds = 25 * 60;
+            const display = document.getElementById('timerDisplay');
+            timerInterval = setInterval(() => {
+                let minutes = Math.floor(totalSeconds / 60);
+                let seconds = totalSeconds % 60;
+                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('¡Tiempo de enfoque terminado! Toma un descanso de 5 minutos.');
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timerDisplay').textContent = "25:00";
+        }
+
+        // Sistema de Lecciones Interactivas
+        function openLesson(title, description) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('lessonModal').classList.remove('hidden');
+        }
+
+        function closeLesson() {
+            document.getElementById('lessonModal').classList.add('hidden');
+        }
+
+        function completeLesson() {
+            closeLesson();
+            localStorage.setItem('nexus_progress', '100');
+            loadProgress();
+            alert('¡Felicitaciones! Has completado la lección y tu progreso se ha actualizado.');
+        }
+
+        function loadProgress() {
+            const progress = localStorage.getItem('nexus_progress') || '50';
+            document.getElementById('progressText').textContent = `${progress}% Completado`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Panel B2B: Gestión de Empleados
+        function loadEmployees() {
+            const employees = JSON.parse(localStorage.getItem('nexus_employees')) || [
+                { name: "Carlos Mendoza", email: "carlos@empresa.com", status: "Activo" },
+                { name: "Lucía Pérez", email: "lucia@empresa.com", status: "En Capacitación" }
+            ];
+            const tbody = document.getElementById('employeeTableBody');
+            tbody.innerHTML = '';
+            employees.forEach((emp, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-800">
+                        <td class="p-3 font-medium">${emp.name}</td>
+                        <td class="p-3 text-slate-400">${emp.email}</td>
+                        <td class="p-3"><span class="bg-blue-900 text-blue-300 text-xs px-2 py-1 rounded-full">${emp.status}</span></td>
+                        <td class="p-3 text-center"><button onclick="removeEmployee(${index})" class="text-rose-400 hover:text-rose-300 font-bold">Eliminar</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addEmployee() {
+            const nameInput = document.getElementById('employeeName');
+            const emailInput = document.getElementById('employeeEmail');
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+
+            if (!name || !email) {
+                alert('Por favor completa ambos campos para registrar al colaborador.');
+                return;
+            }
+
+            const employees = JSON.parse(localStorage.getItem('nexus_employees')) || [
+                { name: "Carlos Mendoza", email: "carlos@empresa.com", status: "Activo" },
+                { name: "Lucía Pérez", email: "lucia@empresa.com", status: "En Capacitación" }
+            ];
+
+            employees.push({ name, email, status: "Activo" });
+            localStorage.setItem('nexus_employees', JSON.stringify(employees));
+
+            nameInput.value = '';
+            emailInput.value = '';
+            loadEmployees();
+        }
+
+        function removeEmployee(index) {
+            const employees = JSON.parse(localStorage.getItem('nexus_employees')) || [];
+            employees.splice(index, 1);
+            localStorage.setItem('nexus_employees', JSON.stringify(employees));
+            loadEmployees();
+        }
+    </script>
+</body>
+</html>
